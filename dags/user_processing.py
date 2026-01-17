@@ -1,18 +1,9 @@
 from airflow.sdk import dag, task
 from airflow.providers.common.sql.operators.sql import SQLExecuteQueryOperator
 from airflow.sdk.bases.sensor import PokeReturnValue
-from airflow.providers.standard.operators import PythonOperator
-
-def _extract_user(ti):
-    fake_user = ti.xcom_pull(task_ids="is_api_available")
-    return {
-        "id": fake_user["id"],
-        "firstname": fake_user["personalInfo"]["firstName"],
-        "lastname": fake_user["personaInfo"]["lastName"],
-        "email": fake_user["personaInfo"]["email"]
-    }
-    print(fake_user)
-
+import requests
+from airflow.providers.postgres.hooks.postgres import PostgresHook
+from datetime import datetime
 
 @dag
 
@@ -45,12 +36,36 @@ def user_processing():
             fake_user = None
         return PokeReturnValue(is_done=condition, xcom_value=fake_user)
     
-    extract_user = PythonOperator(
-        tesk_id = "extract_user",
-        python_callable = _extract_user
-    )
+    @task
+    def _extract_user(fake_user):
+        print(fake_user)
+        return {
+            "id": fake_user["id"],
+            "firstname": fake_user["personalInfo"]["firstName"],
+            "lastname": fake_user["personalInfo"]["lastName"],
+            "email": fake_user["personalInfo"]["email"]
+        }
+    
+        
+    @task
+    def process_user(user_info):
+        import csv
+        
+        with open("/tmp/user_info.csv","w",newline="") as f:
+            user_info["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            writer=csv.DictWriter(f,fieldnames=user_info.keys())
+            writer.writeheader()
+            writer.writerow(user_info)
 
-    is_api_available()
+    @task
+    def store_user():
+        hook=PostgresHook(postgres_conn_id="postgres")
+        hook.copy_expert(sql="COPY users FROM STDIN WITH CSV HEADER", 
+                         filename="/tmp/user_info.csv")
 
+    fake_user = is_api_available()
+    user_info = _extract_user(fake_user)
+    process_user(user_info)
+    store_user()
 
 user_processing()
