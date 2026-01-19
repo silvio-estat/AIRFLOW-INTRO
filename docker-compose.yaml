@@ -89,6 +89,9 @@ x-airflow-common:
       condition: service_healthy
 
 services:
+  airflow-common:
+    user: "50000:0" # Força o usuário padrão do Airflow
+
   postgres:
     image: postgres:13
     environment:
