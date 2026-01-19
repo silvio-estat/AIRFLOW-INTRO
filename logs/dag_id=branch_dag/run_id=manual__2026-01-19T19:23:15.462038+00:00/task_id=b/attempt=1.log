@@ -1,0 +1,7 @@
+{"timestamp":"2026-01-19T19:23:17.175289","level":"info","event":"DAG bundles loaded: dags-folder","logger":"airflow.dag_processing.bundles.manager.DagBundlesManager"}
+{"timestamp":"2026-01-19T19:23:17.176271","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/branch.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2026-01-19T19:23:17.237402","level":"info","event":"Done. Returned value was: equal_1","logger":"airflow.task.operators.airflow.providers.standard.decorators.branch_python._BranchPythonDecoratedOperator"}
+{"timestamp":"2026-01-19T19:23:17.237969","level":"info","event":"Branch into equal_1","logger":"airflow.task.operators.airflow.providers.standard.decorators.branch_python._BranchPythonDecoratedOperator"}
+{"timestamp":"2026-01-19T19:23:17.240130","level":"info","event":"Following branch {'equal_1'}","logger":"airflow.task.operators.airflow.providers.standard.decorators.branch_python._BranchPythonDecoratedOperator"}
+{"timestamp":"2026-01-19T19:23:17.240847","level":"info","event":"Skipping tasks [('diferent_than_1', -1)]","logger":"airflow.task.operators.airflow.providers.standard.decorators.branch_python._BranchPythonDecoratedOperator"}
+{"timestamp":"2026-01-19T19:23:17.241699","level":"info","event":"Skipping downstream tasks.","logger":"task"}
