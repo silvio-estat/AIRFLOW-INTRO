@@ -13,6 +13,7 @@ def user_processing():
         task_id="create_table",
         conn_id="postgres",
         sql= """
+            DROP TABLE IF EXISTS users;
             CREATE TABLE IF NOT EXISTS users (
                 id  INT PRIMARY KEY,
                 firstname VARCHAR(255),
@@ -63,9 +64,15 @@ def user_processing():
         hook.copy_expert(sql="COPY users FROM STDIN WITH CSV HEADER", 
                          filename="/tmp/user_info.csv")
 
-    fake_user = is_api_available()
-    user_info = _extract_user(fake_user)
-    process_user(user_info)
-    store_user()
+
+    #create_table >> process_user(_extract_user(is_api_available())) >> store_user()
+
+    process_user(_extract_user(create_table >> is_api_available())) >> store_user()
+
+    #OU
+    #fake_user = is_api_available()
+    #user_info = _extract_user(fake_user)
+    #process_user(user_info)
+    #store_user()
 
 user_processing()
