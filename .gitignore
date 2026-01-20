@@ -1,0 +1,12 @@
+# Ignorar logs do Airflow (causam erro de permissão por serem criados pelo root/docker)
+logs/
+
+# Ignorar caches do Python (causam conflito de merge)
+**/__pycache__/
+*.pyc
+
+# Ignorar arquivos de ambiente virtual e SO
+.venv/
+venv/
+.DS_Store
+Thumbs.db
